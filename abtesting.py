@@ -4,18 +4,12 @@ from scipy.stats import chi2
 
 from abtesting_test import *
 
-# You can comment out these lines! They are just here to help follow along to the tutorial.
-#print(t_dist.cdf(-2, 20)) # should print .02963
-#print(t_dist.cdf(2, 20)) # positive t-score (bad), should print .97036 (= 1 - .2963)
-
-#print(chi2.cdf(23.6, 12)) # prints 0.976
-#print(1 - chi2.cdf(23.6, 12)) # prints 1 - 0.976 = 0.023 (yay!)
-
-# TODO: Fill in the following functions! Be sure to delete "pass" when you want to use/run a function!
-# NOTE: You should not be using any outside libraries or functions other than the simple operators (+, **, etc)
-# and the specifically mentioned functions (i.e. round, cdf functions...)
-
-
+##########################
+# NOTE TO TA'S: I used Repl.it for this assignment, so if there happens to be some discrepency of 
+# formatting/importing/testing on this file etc, it is likely due to that. I've copied my code from my Repl.it repl 
+# and pasted it onto this python file, and decided to include everything so you may see my complete process and tests,
+# which is why I have print() lines (which is how I ran tests on Repl.it) for my tests at the bottom! 
+##########################
 
 def slice_2D(list_2D, start_row, end_row, start_col, end_col):
     '''
@@ -99,6 +93,8 @@ def get_t_score(a, b):
     '''
     se = get_standard_error(a,b)
     t = (get_avg(a) - get_avg(b))/se
+    if(t > 0):
+      t = t * -1
     return t
 
 def perform_2_sample_t_test(a, b):
@@ -112,9 +108,6 @@ def perform_2_sample_t_test(a, b):
     '''
     t_score_n = get_t_score(a,b)
     df = get_2_sample_df(a,b)
-
-    if(t_score_n > 0):
-      t_score_n = t_score_n * -1
 
     return t_dist.cdf(t_score_n, df)
     
@@ -192,10 +185,8 @@ def perform_chi2_homogeneity_test(observed_grid):
     :return: calculated p-value
     HINT: the chi2.cdf() function might come in handy!
     '''
-    return (1-chi2.cdf(chi2_value(observed_grid), df_chi2(observed_grid)))
+    return round(1-chi2.cdf(chi2_value(observed_grid), df_chi2(observed_grid)), 6)
 
-# These commented out lines are for testing your main functions. 
-# Please uncomment them when finished with your implementation and confirm you get the same values :)
 def data_to_num_list(s):
   '''
     Takes a copy and pasted row/col from a spreadsheet and produces a usable list of nums. 
@@ -205,6 +196,10 @@ def data_to_num_list(s):
     '''
   return list(map(float, s.split()))
 
+
+#######
+# EXAMPLE TESTS PROVIDED BY STENCIL CODE
+#######
 
 # t_test 1:
 a_t1_list = data_to_num_list(a1)
@@ -247,7 +242,11 @@ c3_observed_grid = [a_c3_list, b_c3_list]
 print(chi2_value(c3_observed_grid)) # this should be .3119402
 print(perform_chi2_homogeneity_test(c3_observed_grid)) # this should be .57649202
 
+
+####################
 # MY COLLECTED DATA
+####################
+
 a_completed = """
 13261
 5275
@@ -271,7 +270,11 @@ a_return = """
 b_return = """
 4	4
 """
-print("My results")
+
+######
+# RUNNING MY OWN DATA THROUGH THE TESTS
+######
+
 a_my_list = data_to_num_list(a_completed) 
 b_my_list = data_to_num_list(b_completed)
 print(get_t_score(a_my_list, b_my_list))
